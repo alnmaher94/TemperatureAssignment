@@ -39,7 +39,7 @@ public class Temperature {
 	}
 	
 	private float calcTemperature(){
-		int value = readAnalog(0);
+		int value = readAnalog(4);
 		float voltage = value*(1.80f / 4096.0f);
 		float degrees = (voltage - 0.75f)/0.01f;
 		return (25.0f + degrees);

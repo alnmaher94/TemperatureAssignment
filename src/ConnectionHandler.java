@@ -55,9 +55,9 @@ public class ConnectionHandler extends Thread{
 		this.send(currentTemp);
 	}
 	
-	private void send(Temperature o){
+	private void send(Object o){
 		try {
-			System.out.println("Sending " + o.getSampleNumber() + " to client");
+			System.out.println("Sending " + o + " to client");
 			this.os.reset();
 			this.os.writeObject(o);
 			this.os.flush();
@@ -69,7 +69,7 @@ public class ConnectionHandler extends Thread{
 	}
 	
 	private void sendError(String message){
-		//this.send("Error:" + message); 	
+		this.send("Error:" + message); 	
 	}
 	
 	private void closeSocket(){

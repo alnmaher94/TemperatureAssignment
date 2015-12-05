@@ -2,10 +2,11 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class Temperature {
+public class Temperature implements Serializable, TemperatureInterface{
 	
 	private float temp;
 	private	String date;
@@ -52,17 +53,15 @@ public class Temperature {
 		System.out.println("Sample: " + sample);
 	}
 	
-	public static void main(String[] args){
-		Temperature t1 = new Temperature();
-		t1.display();
-		
-		Temperature t2 = new Temperature();
-		t2.display();
-		
-		Temperature t3 = new Temperature();
-		t3.display();
-		
-		t1.display();
+	public float getTemperature(){
+		return this.temp;
 	}
 	
+	public String getSampleDate(){
+		return this.date;
+	}
+	
+	public int getSampleNumber(){
+		return this.sample;
+	}
 }

@@ -3,17 +3,19 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ConnectionHandler {
+public class ConnectionHandler extends Thread{
 	
 	private Socket clientSocket;
 	private ObjectInputStream is;
 	private ObjectOutputStream os;
+	private Temperature temperatureService;
 
 	ConnectionHandler(Socket clientSocket){
 		this.clientSocket = clientSocket;
+		this.temperatureService = new Temperature();
 	}
 	
-	public void init(){
+	public void run(){
 		try {
 			this.is = new ObjectInputStream(this.clientSocket.getInputStream());
 			this.os = new ObjectOutputStream(this.clientSocket.getOutputStream());
@@ -49,13 +51,14 @@ public class ConnectionHandler {
 	}
 	
 	private void getTemperature(){
-		Temperature currentTemp = new Temperature();
+		Temperature currentTemp = this.temperatureService.updateTemperature();
 		this.send(currentTemp);
 	}
 	
-	private void send(Object o){
+	private void send(Temperature o){
 		try {
-			System.out.println("Sending " + o + " to client");
+			System.out.println("Sending " + o.getSampleNumber() + " to client");
+			this.os.reset();
 			this.os.writeObject(o);
 			this.os.flush();
 		} catch (IOException e) {
@@ -66,7 +69,7 @@ public class ConnectionHandler {
 	}
 	
 	private void sendError(String message){
-		this.send("Error:" + message); 	
+		//this.send("Error:" + message); 	
 	}
 	
 	private void closeSocket(){

@@ -41,7 +41,7 @@ public class Client {
 		this.send(theTempCommand);
 		
 		theTemperature = (TemperatureInterface) receive();
-		System.out.println("Server responded with " + theTemperature.getTemperature());
+		System.out.println("Server responded with " + theTemperature.getTemperature() + " " + theTemperature.getSampleNumber());
 	}
 	
 	private void send(Object o){
@@ -76,6 +76,7 @@ public class Client {
 	
 	public static void main(String[] args){
 		Client app = new Client("127.0.0.1");
+		app.getTemperature();
 		app.getTemperature();
 	}
 }

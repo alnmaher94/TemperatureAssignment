@@ -30,7 +30,7 @@ public class Server {
 			}
 			
 			ConnectionHandler con = new ConnectionHandler(clientSocket);
-			con.init();
+			con.start();
 		}
 		
 		 // Server is no longer listening for client connections - time to shut down.

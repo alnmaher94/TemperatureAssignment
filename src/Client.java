@@ -4,44 +4,46 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client {
+public class Client{
 
-	private static int portNumber = 5050;
 	private Socket socket  = null;
 	private ObjectOutputStream os = null;
 	private ObjectInputStream is = null;
 	
-	public Client(String serverIP){
-		if(!connectToServer(serverIP)){
+	public Client(String serverIP, int serverPort) throws Exception{
+		if(!connectToServer(serverIP, serverPort)){
 			System.out.println("Error");
 		}
 	}
 	
-	private boolean connectToServer(String serverIP){
-		try {
-			this.socket  = new Socket(serverIP, portNumber);
-			this.os = new ObjectOutputStream(socket.getOutputStream());
-			this.is = new ObjectInputStream(socket.getInputStream());
+	private boolean connectToServer(String serverIP, int serverPort) throws Exception{
+			
+			this.socket  = new Socket(serverIP, serverPort);
+			try {
+				
+				this.os = new ObjectOutputStream(socket.getOutputStream());
+				this.is = new ObjectInputStream(socket.getInputStream());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			
 			System.out.println("Connecting to server...");
 			
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
+		
 		return true;
 	}
 	
-	public void getTemperature(){
+	public Temperature getTemperature(){
 		String theTempCommand = "GetTemperature";
-		TemperatureInterface theTemperature;
+		Temperature theTemperature;
 		System.out.println("Sending Command (" + theTempCommand + ") to the server...");
 		this.send(theTempCommand);
 		
-		theTemperature = (TemperatureInterface) receive();
+		theTemperature = (Temperature) receive();
 		System.out.println("Server responded with " + theTemperature.getTemperature() + " " + theTemperature.getSampleNumber());
+		return theTemperature;
 	}
 	
 	private void send(Object o){
@@ -74,9 +76,4 @@ public class Client {
 		
 	}
 	
-	public static void main(String[] args){
-		Client app = new Client("127.0.0.1");
-		app.getTemperature();
-		app.getTemperature();
-	}
 }

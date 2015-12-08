@@ -28,10 +28,9 @@ public class ConnectionHandler extends Thread{
 	}
 	
 	private boolean readCommand(){
-		String s = null;
-		
+		Temperature t;
 		try {
-			s = (String) is.readObject();
+			t = (Temperature) is.readObject();
 		} catch (Exception e) {
 			this.closeSocket();
 			System.out.println("Client Socket closed");
@@ -39,12 +38,12 @@ public class ConnectionHandler extends Thread{
 			
 		}
 		
-		System.out.println("Received command ( " + s + " )");
+		System.out.println("Received command ( " + t + " )");
 		
-		if(s.equalsIgnoreCase("getTemperature")){
+		if(t.getClass().equals(Temperature.class)){
 			this.getTemperature();
 		} else{
-			this.sendError("Invalid command: " + s);
+			this.sendError("Invalid command: " + t);
 		}
 		return true;
 	

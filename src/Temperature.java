@@ -12,11 +12,12 @@ public class Temperature implements Serializable, TemperatureInterface{
 	private	String date;
 	private int sample;
 	private static final String PATH = "/sys/bus/iio/devices/iio:device0/in_voltage";
+	private static int nextSample = 0;
 	
 	Temperature(){
 		this.temp = this.calcTemperature();
 		this.date = Calendar.getInstance().getTime().toString();
-		this.sample = 0;
+		this.sample = nextSample++;
 	}
 	
 	private int readAnalog(int number){
@@ -38,7 +39,7 @@ public class Temperature implements Serializable, TemperatureInterface{
 	}
 	
 	private float calcTemperature(){
-		int value = readAnalog(4);
+		int value = readAnalog(4); //1207;
 		float voltage = value*(1.80f / 4096.0f);
 		float degrees = (voltage - 0.75f)/0.01f;
 		return (25.0f + degrees);

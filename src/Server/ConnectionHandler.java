@@ -1,3 +1,4 @@
+package Server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,11 +9,11 @@ public class ConnectionHandler extends Thread{
 	private Socket clientSocket;
 	private ObjectInputStream is;
 	private ObjectOutputStream os;
-	private Temperature temperatureService;
+	private TemperatureService temperatureService;
 
 	ConnectionHandler(Socket clientSocket){
 		this.clientSocket = clientSocket;
-		this.temperatureService = new Temperature();
+		this.temperatureService = new TemperatureService();
 	}
 	
 	public void run(){
@@ -50,7 +51,10 @@ public class ConnectionHandler extends Thread{
 	}
 	
 	private void getTemperature(){
-		Temperature currentTemp = this.temperatureService.updateTemperature();
+		this.temperatureService = new TemperatureService();
+		float temp = this.temperatureService.calcTemperature();
+		Temperature currentTemp = new Temperature();
+		currentTemp.setTemperature(temp);
 		this.send(currentTemp);
 	}
 	

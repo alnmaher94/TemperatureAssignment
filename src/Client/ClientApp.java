@@ -1,3 +1,4 @@
+package Client;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -21,6 +22,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+
+import Server.Temperature;
 
 public class ClientApp implements ActionListener{
 	

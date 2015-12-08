@@ -1,3 +1,4 @@
+package Client;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -16,7 +17,7 @@ class CustomTextField extends JTextField implements KeyListener{
 		// TODO Auto-generated method stub
 		char character = e.getKeyChar();
 
-        if (character <= '0' || character >= '9' ) {
+        if (character < '0' || character > '9' ) {
             e.consume();
         }
 	}

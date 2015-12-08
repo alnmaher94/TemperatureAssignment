@@ -1,8 +1,11 @@
+package Client;
 import java.util.Calendar;
 import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
+
+import Server.Temperature;
 
 public class ClientThread extends Thread{
 	

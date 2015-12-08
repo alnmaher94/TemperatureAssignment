@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class Temperature implements Serializable, TemperatureInterface{
+public class Temperature implements Serializable, Comparable<Temperature>{
 	
 	private float temp;
 	private	String date;
@@ -39,7 +39,7 @@ public class Temperature implements Serializable, TemperatureInterface{
 	}
 	
 	private float calcTemperature(){
-		int value = readAnalog(4); //1207;
+		int value = 1207; //readAnalog(4); //1207;
 		float voltage = value*(1.80f / 4096.0f);
 		float degrees = (voltage - 0.75f)/0.01f;
 		return (25.0f + degrees);
@@ -68,5 +68,16 @@ public class Temperature implements Serializable, TemperatureInterface{
 	
 	public int getSampleNumber(){
 		return this.sample;
+	}
+
+	@Override
+	public int compareTo(Temperature t) {
+		// TODO Auto-generated method stub
+		if(this.getTemperature() > t.getTemperature())
+			return -1;
+		else if(this.getTemperature() == t.getTemperature())
+			return 0;
+		else
+			return 1;
 	}
 }

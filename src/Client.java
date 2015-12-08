@@ -36,10 +36,10 @@ public class Client{
 	}
 	
 	public Temperature getTemperature(){
-		String theTempCommand = "GetTemperature";
+		Temperature t = new Temperature();
 		Temperature theTemperature;
-		System.out.println("Sending Command (" + theTempCommand + ") to the server...");
-		this.send(theTempCommand);
+		System.out.println("Sending Command (" + t + ") to the server...");
+		this.send(t);
 		
 		theTemperature = (Temperature) receive();
 		System.out.println("Server responded with " + theTemperature.getTemperature() + " " + theTemperature.getSampleNumber());

@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -30,7 +31,9 @@ public class ClientApp implements ActionListener{
 	private JTextField intervalTF;
 	private ClientThread thread;
 	private JTextField ipTextField;
-	private JTextPane pane;
+	private JLabel maxValue;
+	private JLabel minValue;
+	private JLabel avgValue;
 	private Vector<Temperature> v;
 	
 	ClientApp(){
@@ -47,7 +50,24 @@ public class ClientApp implements ActionListener{
 		Container contentPane = frame.getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		
-		 contentPane.add(pane);
+		JPanel centerPanel = new JPanel(new GridLayout(3,2));
+		
+		JLabel maxLabel = new JLabel("Max: ");
+		centerPanel.add(maxLabel);
+		maxValue = new JLabel("");
+		centerPanel.add(maxValue);
+		
+		JLabel minLabel = new JLabel("Min: ");
+		centerPanel.add(minLabel);
+		minValue = new JLabel("");
+		centerPanel.add(minValue);
+		
+		JLabel avgLabel = new JLabel("Average: ");
+		centerPanel.add(avgLabel);
+		avgValue = new JLabel("");
+		centerPanel.add(avgValue);
+		
+		contentPane.add(centerPanel);
 		
 		frame.pack();
 		frame.setVisible(true);
@@ -62,7 +82,7 @@ public class ClientApp implements ActionListener{
 		// TODO Auto-generated method stub
 		if(e.getSource().equals(button)){
 			System.out.println("Button Clicked!!");
-			TemperatureInterface t = client.getTemperature();
+			Temperature t = client.getTemperature();
 			label.setText("Current Temperature: " + t.getTemperature());
 		}
 	}
@@ -115,7 +135,6 @@ public class ClientApp implements ActionListener{
 			
 			try {
 				client = new Client(ip,port);	
-				pane = new JTextPane();
 				thread = new ClientThread(client,interval,this);
 				thread.start();
 			} catch (Exception e) {
@@ -135,7 +154,16 @@ public class ClientApp implements ActionListener{
 
 	
 	public void addData(Temperature t){
+		float avg = 0;;
 		v.addElement(t);
-		pane.setText(t.getTemperature() + "");
+		maxValue.setText(Collections.max(v).getTemperature()+"");
+		minValue.setText(Collections.min(v).getTemperature() + "");
+		if(!v.isEmpty()){
+			for(Temperature tem : v){
+				avg += tem.getTemperature();
+			}
+			avg = avg/v.size();
+			avgValue.setText(avg + "");
+		}
 	}
 }

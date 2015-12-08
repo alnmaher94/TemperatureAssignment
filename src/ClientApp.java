@@ -29,6 +29,7 @@ public class ClientApp implements ActionListener{
 	private Client client;
 	private JOptionPane optionPane;
 	private JTextField intervalTF;
+	private JTextField portTextField;
 	private ClientThread thread;
 	private JTextField ipTextField;
 	private JLabel maxValue;
@@ -101,7 +102,7 @@ public class ClientApp implements ActionListener{
 		
 		JLabel portLabel = new JLabel("Port Number: ");
 		popupPanel.add(portLabel);
-		CustomTextField portTextField = new CustomTextField();
+		portTextField = new CustomTextField();
 		portTextField.setPreferredSize(new Dimension(100,20));
 		popupPanel.add(portTextField);
 		

@@ -74,10 +74,10 @@ public class Temperature implements Serializable, Comparable<Temperature>{
 	public int compareTo(Temperature t) {
 		// TODO Auto-generated method stub
 		if(this.getTemperature() > t.getTemperature())
-			return -1;
+			return 1;
 		else if(this.getTemperature() == t.getTemperature())
 			return 0;
 		else
-			return 1;
+			return -1;
 	}
 }

@@ -39,7 +39,7 @@ public class Temperature implements Serializable, Comparable<Temperature>{
 	}
 	
 	private float calcTemperature(){
-		int value = 1207; //readAnalog(4); //1207;
+		int value = readAnalog(4); //1207;
 		float voltage = value*(1.80f / 4096.0f);
 		float degrees = (voltage - 0.75f)/0.01f;
 		return (25.0f + degrees);

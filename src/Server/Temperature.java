@@ -6,18 +6,19 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class Temperature implements Serializable, Comparable<Temperature>{
 	
 	private float temp;
-	private	String date;
+	private	Date date;
 	private int sample;
 	
 	private static int nextSample = 0;
 	
 	public Temperature(){
 		this.temp = 0;
-		this.date = Calendar.getInstance().getTime().toString();
+		this.date = Calendar.getInstance().getTime();
 		this.sample = nextSample++;
 	}
 	
@@ -36,7 +37,7 @@ public class Temperature implements Serializable, Comparable<Temperature>{
 		return this.temp;
 	}
 	
-	public String getSampleDate(){
+	public Date getSampleDate(){
 		return this.date;
 	}
 	

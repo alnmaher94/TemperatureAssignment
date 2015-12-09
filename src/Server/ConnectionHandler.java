@@ -34,7 +34,9 @@ public class ConnectionHandler extends Thread{
 			t = (Temperature) is.readObject();
 		} catch (Exception e) {
 			this.closeSocket();
-			System.out.println("Client Socket closed");
+			System.out.println("Client Socket " + 
+								clientSocket.getInetAddress().toString() 
+								+ " closed");
 			return false;
 			
 		}

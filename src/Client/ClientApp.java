@@ -1,5 +1,6 @@
 package Client;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -10,9 +11,13 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.Collections;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
@@ -38,14 +43,14 @@ public class ClientApp implements ActionListener{
 	private JLabel maxValue;
 	private JLabel minValue;
 	private JLabel avgValue;
+	private JLabel lastValue;
+	private JLabel firstValue;
 	private Vector<Temperature> v;
+	private CustomCanvas c;
 	
 	ClientApp(){
 		
 		//
-		
-		while(!popup()){}
-		
 		this.v = new Vector<Temperature>();
 		
 		JFrame frame = new JFrame("Temperature Application");
@@ -54,24 +59,36 @@ public class ClientApp implements ActionListener{
 		Container contentPane = frame.getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		
-		JPanel centerPanel = new JPanel(new GridLayout(3,2));
+		JPanel sidePanel = new JPanel(new GridLayout(4,2));
 		
 		JLabel maxLabel = new JLabel("Max: ");
-		centerPanel.add(maxLabel);
+		sidePanel.add(maxLabel);
 		maxValue = new JLabel("");
-		centerPanel.add(maxValue);
+		sidePanel.add(maxValue);
 		
-		JLabel minLabel = new JLabel("Min: ");
-		centerPanel.add(minLabel);
-		minValue = new JLabel("");
-		centerPanel.add(minValue);
 		
 		JLabel avgLabel = new JLabel("Average: ");
-		centerPanel.add(avgLabel);
+		sidePanel.add(avgLabel);
 		avgValue = new JLabel("");
-		centerPanel.add(avgValue);
+		sidePanel.add(avgValue);
 		
-		contentPane.add(centerPanel);
+		JLabel minLabel = new JLabel("Min: ");
+		sidePanel.add(minLabel);
+		minValue = new JLabel("");
+		sidePanel.add(minValue);
+		
+		JLabel lastReading = new JLabel("Last Reading: ");
+		sidePanel.add(lastReading);
+		lastValue = new JLabel("");
+		sidePanel.add(lastValue);
+		
+		contentPane.add(sidePanel,BorderLayout.WEST);
+		
+		c = new CustomCanvas();
+		c.setPreferredSize(new Dimension(1000,500));
+		contentPane.add(c, BorderLayout.CENTER);
+		
+		while(!popup()){}
 		
 		frame.pack();
 		frame.setVisible(true);
@@ -169,5 +186,14 @@ public class ClientApp implements ActionListener{
 			avg = avg/v.size();
 			avgValue.setText(avg + "");
 		}
+		
+		Date d = v.get(v.size() - 1).getSampleDate();
+		lastValue.setText(d.toString());
+		
+		updateCanvas();
+	}
+	
+	public void updateCanvas(){
+		c.drawGraph(v,10);
 	}
 }

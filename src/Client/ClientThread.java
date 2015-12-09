@@ -12,25 +12,22 @@ public class ClientThread extends Thread{
 	private Client client;
 	private int interval;
 	private ClientApp app;
-	private Vector<Temperature> v;
 	
 	ClientThread(Client client, int interval, ClientApp app){
 		this.client = client;
 		this.interval = interval * 1000;
 		this.app = app;
-		v = new Vector<Temperature>();
 	}
 	
 	public void run(){
-		while(true){
-			long startTime = Calendar.getInstance().getTimeInMillis();
-			
-			while(Calendar.getInstance().getTimeInMillis() - startTime < interval){}
-			
+		while(true){			
 			Temperature t = client.getTemperature();
 			System.out.println("Request Made");
 
 			app.addData(t);
+			
+			long startTime = Calendar.getInstance().getTimeInMillis();		
+			while(Calendar.getInstance().getTimeInMillis() - startTime < interval){}
 		}
 	}
 }

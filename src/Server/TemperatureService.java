@@ -14,6 +14,7 @@ public class TemperatureService {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(PATH + number + "_raw"));
 			value = Integer.parseInt(br.readLine());
+			br.close();
 			
 		} catch (FileNotFoundException e) {
 			System.err.println("Incorrect Path to sensor");
@@ -32,7 +33,6 @@ public class TemperatureService {
 		float voltage = value*(1.80f / 4096.0f);
 		float degrees = (voltage - 0.75f)/0.01f;
 		return (25.0f + degrees);
-		//return (float) ((Math.random()*5.0f) + 10.0f);
 		
 	}
 }

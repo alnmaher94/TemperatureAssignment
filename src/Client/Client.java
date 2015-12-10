@@ -3,38 +3,32 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import Server.Temperature;
 
-public class Client{
+	public class Client{
 
-	private Socket socket  = null;
-	private ObjectOutputStream os = null;
-	private ObjectInputStream is = null;
-	
-	public Client(String serverIP, int serverPort) throws Exception{
-		if(!connectToServer(serverIP, serverPort)){
-			System.out.println("Error");
-		}
+		private Socket socket  = null;
+		private ObjectOutputStream os = null;
+		private ObjectInputStream is = null;
+		
+		public Client(String serverIP, int serverPort) throws Exception{
+			if(!connectToServer(serverIP, serverPort)){
+				System.out.println("Error");
+			}
 	}
 	
 	private boolean connectToServer(String serverIP, int serverPort) throws Exception{
-			
-			this.socket  = new Socket(serverIP, serverPort);
-			try {
-				
-				this.os = new ObjectOutputStream(socket.getOutputStream());
-				this.is = new ObjectInputStream(socket.getInputStream());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
-			System.out.println("Connecting to server...");
-			
 		
+		this.socket  = new Socket(serverIP, serverPort);
+		try {		
+			this.os = new ObjectOutputStream(socket.getOutputStream());
+			this.is = new ObjectInputStream(socket.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("Connecting to server...");
 		return true;
 	}
 	
@@ -56,7 +50,6 @@ public class Client{
 			this.os.writeObject(o);
 			this.os.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -71,7 +64,6 @@ public class Client{
 			o = is.readObject();
 			System.out.println("Object received...");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

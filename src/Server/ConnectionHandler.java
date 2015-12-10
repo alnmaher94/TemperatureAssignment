@@ -23,6 +23,7 @@ public class ConnectionHandler extends Thread{
 	ConnectionHandler(Socket clientSocket, File logs){
 		this.clientSocket = clientSocket;
 		this.temperatureService = new TemperatureService();
+		
 		this.logs = logs;
 		this.connectTime = Calendar.getInstance().getTime();
 		this.ipAddress = clientSocket.getInetAddress().toString();
@@ -34,7 +35,6 @@ public class ConnectionHandler extends Thread{
 			this.is = new ObjectInputStream(this.clientSocket.getInputStream());
 			this.os = new ObjectOutputStream(this.clientSocket.getOutputStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -48,11 +48,9 @@ public class ConnectionHandler extends Thread{
 		} catch (Exception e) {
 			this.closeSocket();
 			disconnectTime = Calendar.getInstance().getTime();
-			//System.out.println(connectTime + " : " + disconnectTime
-			//					+ " : " + ipAddress + " : " + samplesTaken);
+
 			try {
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/YY (hh:mm:ss)");
-				
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/YY (hh:mm:ss)");		
 				String connect =  format.format(connectTime);
 				String disconnect = format.format(disconnectTime);
 				FileWriter fw = new FileWriter(logs,true);
@@ -61,7 +59,6 @@ public class ConnectionHandler extends Thread{
 				fw.flush();
 				fw.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			System.out.println("Client Socket at" + 
@@ -98,7 +95,6 @@ public class ConnectionHandler extends Thread{
 			this.os.flush();
 			samplesTaken++;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -115,7 +111,6 @@ public class ConnectionHandler extends Thread{
 			this.is.close();
 			this.clientSocket.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	

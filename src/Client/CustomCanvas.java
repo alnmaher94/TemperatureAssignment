@@ -1,21 +1,22 @@
 package Client;
 
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Vector;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 
 import Server.Temperature;
 
 
 public class CustomCanvas extends JComponent{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int width, height,range, yOffset, xOffset;
 	private float avg = 0;
 	private int stringWidth = 80; 
@@ -42,7 +43,7 @@ public class CustomCanvas extends JComponent{
 		
 		int start = 0;
 
-		if(v != null){
+		if(v != null){ //When first called v is not initalized
 			if(v.size() > range)
 				start = v.size() - range;
 			

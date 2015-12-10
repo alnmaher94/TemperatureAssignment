@@ -6,16 +6,19 @@ import javax.swing.JTextField;
 
 class CustomTextField extends JTextField implements KeyListener{
     
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public CustomTextField(){
 		super();
         this.addKeyListener(this);
 
     }
 
-
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
 		char character = e.getKeyChar();
 
         if (character < '0' || character > '9' ) {
@@ -24,14 +27,8 @@ class CustomTextField extends JTextField implements KeyListener{
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyPressed(KeyEvent e) {}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyReleased(KeyEvent e) {}
 }

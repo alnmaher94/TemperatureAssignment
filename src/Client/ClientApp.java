@@ -5,31 +5,18 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Collections;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -37,10 +24,12 @@ import Server.Temperature;
 
 public class ClientApp extends JFrame implements ComponentListener,ChangeListener{
 	
-	private JButton button;
-	private JLabel label;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private Client client;
-	private JOptionPane optionPane;
 	private JTextField intervalTF;
 	private JTextField portTextField;
 	private ClientThread thread;
@@ -111,7 +100,7 @@ public class ClientApp extends JFrame implements ComponentListener,ChangeListene
 		c = new CustomCanvas();
 		c.setPreferredSize(new Dimension(1000,500));
 	
-		//Slider
+		//Range Slider
 		sliderPanel = new JPanel();
 		sliderPanel.setBackground(new Color(33,33,33));
 		slider = new JSlider();
@@ -129,7 +118,8 @@ public class ClientApp extends JFrame implements ComponentListener,ChangeListene
 		contentPane.add(sidePanel,BorderLayout.WEST);
 		contentPane.add(c, BorderLayout.CENTER);
 		contentPane.add(sliderPanel,BorderLayout.SOUTH);
-		//PopUp
+		
+		//Launch PopUp
 		while(!popup()){}
 		
 		this.pack();
@@ -142,9 +132,8 @@ public class ClientApp extends JFrame implements ComponentListener,ChangeListene
 
 
 	
-	private boolean popup(){
-		
-		//IP Address PopUp
+	private boolean popup(){ //IP Address PopUp
+			
 		JPanel popupPanel = new JPanel();
 		popupPanel.setLayout(new GridLayout(3,2));
 		
@@ -175,7 +164,7 @@ public class ClientApp extends JFrame implements ComponentListener,ChangeListene
 													, JOptionPane.OK_OPTION, JOptionPane.CANCEL_OPTION,
 													null, options, options[0]);
 		
-		if(result == JOptionPane.OK_OPTION){
+		if(result == JOptionPane.OK_OPTION){ //Ensure correct settings entered
 			String ip = ipTextField.getText().trim().toString();
 			String portString = portTextField.getText().trim().toString();
 			String intervalString = intervalTF.getText().trim().toString();
@@ -240,26 +229,16 @@ public class ClientApp extends JFrame implements ComponentListener,ChangeListene
 	}
 
 	@Override
-	public void componentMoved(ComponentEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void componentMoved(ComponentEvent e) {}
 
 	@Override
-	public void componentShown(ComponentEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void componentShown(ComponentEvent e) {}
 
 	@Override
-	public void componentHidden(ComponentEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void componentHidden(ComponentEvent e) {}
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
 		if(e.getSource().equals(slider)){
 			int value = slider.getValue();
 			rangeTF.setText(value + "");

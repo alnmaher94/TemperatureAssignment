@@ -1,9 +1,5 @@
 package Client;
 import java.util.Calendar;
-import java.util.Vector;
-
-import javax.swing.JLabel;
-import javax.swing.JTextPane;
 
 import Server.Temperature;
 
@@ -24,7 +20,7 @@ public class ClientThread extends Thread{
 			long startTime = Calendar.getInstance().getTimeInMillis();	
 			
 			Temperature t = client.getTemperature();
-			System.out.println("Request Made");
+			System.out.println("Request for Temperature Made");
 
 			app.addData(t);
 			

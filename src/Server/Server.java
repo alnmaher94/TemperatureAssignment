@@ -10,16 +10,16 @@ public class Server {
 
 	private static int portNumber = 5050;
 	
-	private static File setupLogs(){
+	private static File setupLogs(){ //Creates a log file and headings.
 		String date = Calendar.getInstance().getTime().toString();
 		date = date.replaceAll(" ", "-");
 		date = date.replaceAll(":", "-");
 		System.out.println(date);
-		File logs = new File("./logs-"+date+".txt");
+		File logs = new File("../logs-"+date+".txt");
 		try {
 			logs.createNewFile();
 			FileWriter fw = new FileWriter(logs);
-			fw.write("Connect Time : Disconnect Time : IP Adress : Samples Taken\n");
+			fw.write("Connect Time	:Disconnect Time	:IP Adress	:Samples Taken\n");
 			fw.flush();
 			fw.close();
 		} catch (IOException e) {
@@ -41,7 +41,6 @@ public class Server {
 			socket = new ServerSocket(portNumber);
 			System.out.println("Server startd on port " + portNumber);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -52,7 +51,6 @@ public class Server {
 				clientSocket = socket.accept();
 				System.out.println("Client accepted from IP " + clientSocket.getInetAddress().toString());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

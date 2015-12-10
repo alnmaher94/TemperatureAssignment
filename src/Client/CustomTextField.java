@@ -7,6 +7,7 @@ import javax.swing.JTextField;
 class CustomTextField extends JTextField implements KeyListener{
     
 	public CustomTextField(){
+		super();
         this.addKeyListener(this);
 
     }

@@ -1,13 +1,39 @@
 package Server;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Calendar;
 
 public class Server {
 
 	private static int portNumber = 5050;
 	
+	private static File setupLogs(){
+		String date = Calendar.getInstance().getTime().toString();
+		date = date.replaceAll(" ", "-");
+		date = date.replaceAll(":", "-");
+		System.out.println(date);
+		File logs = new File("./logs-"+date+".txt");
+		try {
+			logs.createNewFile();
+			FileWriter fw = new FileWriter(logs);
+			fw.write("Connect Time : Disconnect Time : IP Adress : Samples Taken\n");
+			fw.flush();
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.err.println("Could not create log file");
+			e.printStackTrace();
+		}
+		
+		return logs;
+	}
+	
 	public static void main(String[] args){
+		
+		File logs = setupLogs();
 		
 		boolean listening = true;
 		ServerSocket socket = null;
@@ -30,7 +56,7 @@ public class Server {
 				e.printStackTrace();
 			}
 			
-			ConnectionHandler con = new ConnectionHandler(clientSocket);
+			ConnectionHandler con = new ConnectionHandler(clientSocket,logs);
 			con.start();
 		}
 		

@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.UnknownHostException;
@@ -25,12 +27,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import Server.Temperature;
 
-public class ClientApp implements ActionListener{
+public class ClientApp extends JFrame implements ComponentListener,ChangeListener{
 	
 	private JButton button;
 	private JLabel label;
@@ -45,68 +50,97 @@ public class ClientApp implements ActionListener{
 	private JLabel avgValue;
 	private JLabel lastValue;
 	private JLabel firstValue;
-	private Vector<Temperature> v;
+	private Vector<Temperature> v ;
 	private CustomCanvas c;
+	private JSlider slider;
+	private JTextField rangeTF;
+	private JPanel sliderPanel;
+	private int range;
 	
 	ClientApp(){
 		
-		//
+		super("Temperature Application");
+		this.range = 10;
 		this.v = new Vector<Temperature>();
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JFrame frame = new JFrame("Temperature Application");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		Container contentPane = frame.getContentPane();
+		Container contentPane = this.getContentPane();
 		contentPane.setLayout(new BorderLayout());
+		contentPane.addComponentListener(this);
 		
-		JPanel sidePanel = new JPanel(new GridLayout(4,2));
+		//Side Panel Labels
+		JPanel sidePanel = new JPanel(new GridLayout(5,2));
+		sidePanel.setBackground(new Color(33,33,33));
 		
 		JLabel maxLabel = new JLabel("Max: ");
+		maxLabel.setForeground(Color.white);
 		sidePanel.add(maxLabel);
 		maxValue = new JLabel("");
+		maxValue.setForeground(Color.red);
 		sidePanel.add(maxValue);
 		
-		
 		JLabel avgLabel = new JLabel("Average: ");
+		avgLabel.setForeground(Color.white);
 		sidePanel.add(avgLabel);
 		avgValue = new JLabel("");
+		avgValue.setForeground(Color.yellow);
 		sidePanel.add(avgValue);
 		
 		JLabel minLabel = new JLabel("Min: ");
+		minLabel.setForeground(Color.white);
 		sidePanel.add(minLabel);
 		minValue = new JLabel("");
+		minValue.setForeground(Color.green);
 		sidePanel.add(minValue);
 		
 		JLabel lastReading = new JLabel("Last Reading: ");
+		lastReading.setForeground(Color.white);
 		sidePanel.add(lastReading);
 		lastValue = new JLabel("");
+		lastValue.setForeground(Color.white);
 		sidePanel.add(lastValue);
 		
-		contentPane.add(sidePanel,BorderLayout.WEST);
+		JLabel firstReading = new JLabel("First Reading: ");
+		firstReading.setForeground(Color.white);
+		sidePanel.add(firstReading);
+		firstValue = new JLabel("");
+		firstValue.setForeground(Color.white);
+		sidePanel.add(firstValue);
 		
+		//Canvas
 		c = new CustomCanvas();
 		c.setPreferredSize(new Dimension(1000,500));
-		contentPane.add(c, BorderLayout.CENTER);
+	
+		//Slider
+		sliderPanel = new JPanel();
+		sliderPanel.setBackground(new Color(33,33,33));
+		slider = new JSlider();
+		slider.setMaximum(50);
+		slider.setMinimum(5);
+		slider.setValue(10);
+		slider.addChangeListener(this);
+		rangeTF = new JTextField();
+		rangeTF.setEditable(false);
+		rangeTF.setPreferredSize(new Dimension(20, 20));
+		rangeTF.setText(range + "");
+		sliderPanel.add(slider);
+		sliderPanel.add(rangeTF);
 		
+		contentPane.add(sidePanel,BorderLayout.WEST);
+		contentPane.add(c, BorderLayout.CENTER);
+		contentPane.add(sliderPanel,BorderLayout.SOUTH);
+		//PopUp
 		while(!popup()){}
 		
-		frame.pack();
-		frame.setVisible(true);
+		this.pack();
+		this.setVisible(true);
 	}
 	
 	public static void main (String[] args){
 		new ClientApp();
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		if(e.getSource().equals(button)){
-			System.out.println("Button Clicked!!");
-			Temperature t = client.getTemperature();
-			label.setText("Current Temperature: " + t.getTemperature());
-		}
-	}
+
 	
 	private boolean popup(){
 		
@@ -159,7 +193,6 @@ public class ClientApp implements ActionListener{
 				thread = new ClientThread(client,interval,this);
 				thread.start();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Could not Connect to Server");
 				return false;
@@ -177,23 +210,61 @@ public class ClientApp implements ActionListener{
 	public void addData(Temperature t){
 		float avg = 0;;
 		v.addElement(t);
-		maxValue.setText(Collections.max(v).getTemperature()+"");
-		minValue.setText(Collections.min(v).getTemperature() + "");
+		maxValue.setText(Collections.max(v).getTemperature()+" deg");
+		minValue.setText(Collections.min(v).getTemperature() + " deg");
 		if(!v.isEmpty()){
 			for(Temperature tem : v){
 				avg += tem.getTemperature();
 			}
 			avg = avg/v.size();
-			avgValue.setText(avg + "");
+			avgValue.setText(avg + " deg");
+			
+			Date d = v.get(v.size() - 1).getSampleDate();
+			lastValue.setText(d.toString());
+			
+			d = v.get(0).getSampleDate();
+			firstValue.setText(d.toString());
 		}
-		
-		Date d = v.get(v.size() - 1).getSampleDate();
-		lastValue.setText(d.toString());
-		
+				
 		updateCanvas();
+		sliderPanel.repaint();
 	}
 	
-	public void updateCanvas(){
-		c.drawGraph(v,10);
+	private void updateCanvas(){
+		c.drawGraph(v,range);
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) {
+			updateCanvas();
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource().equals(slider)){
+			int value = slider.getValue();
+			rangeTF.setText(value + "");
+			range = value;
+			updateCanvas();
+		}
 	}
 }

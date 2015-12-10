@@ -1,8 +1,13 @@
 package Server;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ConnectionHandler extends Thread{
 	
@@ -10,10 +15,18 @@ public class ConnectionHandler extends Thread{
 	private ObjectInputStream is;
 	private ObjectOutputStream os;
 	private TemperatureService temperatureService;
+	private Date connectTime, disconnectTime;
+	private int samplesTaken;
+	private String ipAddress;
+	private File logs;
 
-	ConnectionHandler(Socket clientSocket){
+	ConnectionHandler(Socket clientSocket, File logs){
 		this.clientSocket = clientSocket;
 		this.temperatureService = new TemperatureService();
+		this.logs = logs;
+		this.connectTime = Calendar.getInstance().getTime();
+		this.ipAddress = clientSocket.getInetAddress().toString();
+		this.samplesTaken = 0;
 	}
 	
 	public void run(){
@@ -34,7 +47,24 @@ public class ConnectionHandler extends Thread{
 			t = (Temperature) is.readObject();
 		} catch (Exception e) {
 			this.closeSocket();
-			System.out.println("Client Socket " + 
+			disconnectTime = Calendar.getInstance().getTime();
+			//System.out.println(connectTime + " : " + disconnectTime
+			//					+ " : " + ipAddress + " : " + samplesTaken);
+			try {
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/YY (hh:mm:ss)");
+				
+				String connect =  format.format(connectTime);
+				String disconnect = format.format(disconnectTime);
+				FileWriter fw = new FileWriter(logs,true);
+				fw.append(connect + " : " + disconnect
+								+ " : " + ipAddress + " : " + samplesTaken+"\n");
+				fw.flush();
+				fw.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			System.out.println("Client Socket at" + 
 								clientSocket.getInetAddress().toString() 
 								+ " closed");
 			return false;
@@ -66,6 +96,7 @@ public class ConnectionHandler extends Thread{
 			this.os.reset();
 			this.os.writeObject(o);
 			this.os.flush();
+			samplesTaken++;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

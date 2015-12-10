@@ -21,13 +21,14 @@ public class ClientThread extends Thread{
 	
 	public void run(){
 		while(true){			
+			long startTime = Calendar.getInstance().getTimeInMillis();	
+			
 			Temperature t = client.getTemperature();
 			System.out.println("Request Made");
 
 			app.addData(t);
 			
-			long startTime = Calendar.getInstance().getTimeInMillis();		
-			while(Calendar.getInstance().getTimeInMillis() - startTime < interval){}
+			while(Calendar.getInstance().getTimeInMillis() - startTime < interval){}	
 		}
 	}
 }

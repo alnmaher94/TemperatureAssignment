@@ -23,6 +23,11 @@ public class CustomCanvas extends JComponent{
 	String maxString, minString;
 	private Vector<Temperature> v;
 	
+	CustomCanvas(){
+		super();
+		this.range = 10;
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g){
 		
@@ -36,57 +41,71 @@ public class CustomCanvas extends JComponent{
 		g.drawLine(stringWidth, height+yOffset * 2,width + stringWidth * 2, height+yOffset * 2);
 		
 		int start = 0;
-		if(v.size() > range)
-			start = v.size() - range;
-		
-		int count = 1;
-		for(int i = start; i < v.size(); i++){	
-			g.setColor(new Color(0,0,255));
-			Temperature t = v.get(i);
-			this.xrange = max - min;
-			int ypixel = this.yCoordinate(t.getTemperature());
-			int xpixel = this.xCoordinate(count);
-			g.fillRect(xpixel, ypixel, 5, 5);
+
+		if(v != null){
+			if(v.size() > range)
+				start = v.size() - range;
 			
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/YY (HH:mm:ss)");
-			String time = format.format(t.getSampleDate());
-		
-			g.drawString(time, xpixel + 5, ypixel + 5);
+			int count = 1;
+			for(int i = start; i < v.size(); i++){	
+				g.setColor(new Color(0,0,255));
+				Temperature t = v.get(i);
+				this.xrange = max - min;
+				int ypixel = this.yCoordinate(t.getTemperature());
+				int xpixel = this.xCoordinate(count);
+				g.fillRect(xpixel, ypixel, 5, 5);
+				
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YY");
+				SimpleDateFormat timeFormat = new SimpleDateFormat("(HH:mm:ss)"); 
+				String date = dateFormat.format(t.getSampleDate());
+				String time = timeFormat.format(t.getSampleDate());
+				String temp = t.getTemperature()+"";
 			
-			String minString = min + " deg";
-			g.drawString(minString, 0, this.yCoordinate(Collections.min(v).getTemperature()) + 5);
-			String avgString = avg + " deg";
-			g.drawString(avgString, 0, this.yCoordinate(avg) + 5);
-			String maxString = max + " deg";
-			g.drawString(maxString, 0, this.yCoordinate(Collections.max(v).getTemperature()) + 5);
-			
-			g.setColor(new Color(255,255,0));
-			g.drawLine(stringWidth, this.yCoordinate(avg),width + stringWidth * 2, this.yCoordinate(avg));
-			g.setColor(new Color(255,0,0));
-			g.drawLine(stringWidth, this.yCoordinate(max),width + stringWidth * 2, this.yCoordinate(max));
-			g.setColor(new Color(0,255,0));
-			g.drawLine(stringWidth, this.yCoordinate(min),width + stringWidth * 2, this.yCoordinate(min));
-			
-			count++;
+				g.drawString(time, xpixel-20, height+yOffset * 6);
+				g.drawString(date, xpixel-20, height+yOffset * 8);
+				g.drawString(temp, xpixel - 20, ypixel + 15);
+				
+				String minString = min + " deg";
+				g.drawString(minString, 0, this.yCoordinate(Collections.min(v).getTemperature()) + 5);
+				String avgString = avg + " deg";
+				g.drawString(avgString, 0, this.yCoordinate(avg) + 5);
+				String maxString = max + " deg";
+				g.drawString(maxString, 0, this.yCoordinate(Collections.max(v).getTemperature()) + 5);
+				
+				g.setColor(new Color(255,255,0));
+				g.drawLine(stringWidth, this.yCoordinate(avg),width + stringWidth * 2, this.yCoordinate(avg));
+				g.setColor(new Color(255,0,0));
+				g.drawLine(stringWidth, this.yCoordinate(max),width + stringWidth * 2, this.yCoordinate(max));
+				g.setColor(new Color(0,255,0));
+				g.drawLine(stringWidth, this.yCoordinate(min),width + stringWidth * 2, this.yCoordinate(min));
+					
+				count++;
+			}
 		}
 	}
+	
 	
 	public void drawGraph(Vector<Temperature> v, int range){
 		
 		height = this.getHeight() - 50;
 		width = this.getWidth() - 2*stringWidth;
 		
-		max = Collections.max(v).getTemperature();
-		min = Collections.min(v).getTemperature();
-		
+		max = 0;
+		min = 0;
 		avg = 0;
-		if(!v.isEmpty()){
-			for(Temperature tem : v){
-				avg += tem.getTemperature();
-			}
-			avg = avg/v.size();
-		}
 		
+		if (!v.isEmpty()){
+			max = Collections.max(v).getTemperature();
+			min = Collections.min(v).getTemperature();
+		
+			avg = 0;
+			if(!v.isEmpty()){
+				for(Temperature tem : v){
+					avg += tem.getTemperature();
+				}
+				avg = avg/v.size();
+			}
+		}
 		scale = max - min;
 		scale = height/scale;
 		

@@ -14,7 +14,7 @@ public class Temperature implements Serializable, Comparable<Temperature>{
 	private	Date date;
 	private int sample;
 	
-	private static int nextSample = 0;
+	private static int nextSample = 1;
 	
 	public Temperature(){
 		this.temp = 0;

@@ -11,8 +11,12 @@ import Server.Temperature;
 		private Socket socket  = null;
 		private ObjectOutputStream os = null;
 		private ObjectInputStream is = null;
+		private String serverIP;
+		private int serverPort;
 		
 		public Client(String serverIP, int serverPort) throws Exception{
+			this.serverIP = serverIP;
+			this.serverPort = serverPort;
 			if(!connectToServer(serverIP, serverPort)){
 				System.out.println("Error");
 			}
@@ -37,10 +41,16 @@ import Server.Temperature;
 		Temperature theTemperature;
 		System.out.println("Sending Command (" + t + ") to the server...");
 		this.send(t);
-		
-		theTemperature = (Temperature) receive();
-		System.out.println("Server responded with " + theTemperature.getTemperature() + " " + theTemperature.getSampleNumber());
-		return theTemperature;
+		try{
+			theTemperature = (Temperature) receive();
+			if(theTemperature == null)
+				System.out.println("Could not get Object from Server");
+			System.out.println("Server responded with " + theTemperature.getTemperature() + " " + theTemperature.getSampleNumber());
+			return theTemperature;
+		} catch(ClassCastException e){
+			e.printStackTrace();
+			return null;
+		}	
 	}
 	
 	private void send(Object o){
@@ -69,6 +79,13 @@ import Server.Temperature;
 		
 		return o;
 		
+	}
+	
+	public String getServerIP(){
+		return this.serverIP;
+	}
+	public int getServerPort(){
+		return this.serverPort;
 	}
 	
 }

@@ -20,7 +20,7 @@ public class CustomCanvas extends JComponent{
 	private int width, height,range, yOffset, xOffset;
 	private float avg = 0;
 	private int stringWidth = 80; 
-	private float max,min,scale,xrange;
+	private float max,min,scale,yrange;
 	String maxString, minString;
 	private Vector<Temperature> v;
 	
@@ -51,7 +51,7 @@ public class CustomCanvas extends JComponent{
 			for(int i = start; i < v.size(); i++){	
 				g.setColor(new Color(0,0,255));
 				Temperature t = v.get(i);
-				this.xrange = max - min;
+				this.yrange = max - min; //Used to scale graph
 				int ypixel = this.yCoordinate(t.getTemperature());
 				int xpixel = this.xCoordinate(count);
 				g.fillRect(xpixel, ypixel, 5, 5);
@@ -124,7 +124,7 @@ public class CustomCanvas extends JComponent{
 	
 	private int yCoordinate(float t){
 		yOffset = 5;
-		int yPixel = (int) (((xrange - (t - min)) /xrange) * height);
+		int yPixel = (int) (((yrange - (t - min)) /yrange) * height);
 		return yPixel + yOffset;
 	}
 	
